@@ -1,28 +1,23 @@
-<!DOCTYPE html>
 <html>
-<head>
-  <title>ESP8266 Temperature Monitor</title>
-</head>
 <body>
-  <h1>ESP8266 Temperature</h1>
-  
-  <p>Temperature: <span id="temp">--</span> °C</p>
 
-  <script>
-    // Replace with your actual webhook URL
-    const webhookUrl = 'https://webhook.site/fbda7154-9421-4ab1-8570-a3eabbc605af';
+<h1>当前温度</h1>
+<p id="temp">获取中...</p>
 
-    async function getTemperature() {
-      const response = await fetch(webhookUrl);
-      const data = await response.json();
-      document.getElementById('temp').textContent = data.temperature;
-    }
+<script>
+const apiUrl = '/temp_data.php';
 
-    getTemperature();
+async function getTemp(){
+  const response = await fetch(apiUrl);
+  const data = await response.json();
 
-    // Update temperature every 10 seconds
-    setInterval(getTemperature, 10000);
-  </script>
+  document.getElementById('temp').innerText = data.temperature;
+}
+
+getTemp();
+
+setInterval(getTemp, 10000);
+</script>
 
 </body>
 </html>
