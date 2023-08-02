@@ -1,66 +1,53 @@
-<!DOCTYPE html>
 <html>
 <head>
-  <title>我的温度数据</title>
-  <!-- 引入Bootstrap库 -->
-  <!-- 设置网页样式 -->
-  <style>
-    body {
-      font-family: Arial;
-      margin: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    #temp {
-      font-size: 24px;
-      font-weight: bold;
-      color: green;
-    }
-  </style>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
-  <!-- 显示网页标题 -->
-  <h1>我的温度数据</h1>
-  <!-- 使用Bootstrap的卡片组件来显示最新的温度值 -->
-  <div class="card text-center">
-    <div class="card-header">
-      最新的温度值
-    </div>
-    <div class="card-body">
-      <p id="temp">正在获取温度数据...</p>
-    </div>
-    <div class="card-footer text-muted">
-      数据来源：^2^
-    </div>
-  </div>
-  <!-- 嵌入JavaScript代码 -->
-  <script>
-    // 定义一个函数，用来获取webhook URL返回的数据
-    function getData() {
-      // 创建一个XMLHttpRequest对象
-      var xhr = new XMLHttpRequest();
-      // 设置请求方法为GET，请求地址为webhook URL
-      xhr.open("GET", "https://webhook.site/fbda7154-9421-4ab1-8570-a3eabbc605af");
-      // 设置请求头为JSON格式
-      xhr.setRequestHeader("Content-Type", "application/json");
-      // 设置请求完成后的回调函数
-      xhr.onload = function() {
-        // 如果请求成功
-        if (xhr.status == 200) {
-          // 解析响应数据为JSON对象
-          var response = JSON.parse(xhr.responseText);
-          // 获取温度值
-          var temp = response.temperature;
-          // 在网页上显示最新的温度值
-          document.getElementById("temp").innerHTML = temp + "℃";
-        }
-      };
-      // 发送请求
-      xhr.send();
-    }
-    // 每隔5秒调用一次getData函数，获取最新的数据
-    setInterval(getData, 5000);
-  </script>
+    <h1>温度检测设备</h1>
+    <p id="temperature">正在获取DS18B20数据...</p>
+    <script>
+        // 定义 webhook_URL
+        var webhook_URL = "https://webhook.site/fbda7154-9421-4ab1-8570-a3eabbc605af";
+
+        // 创建一个 XMLHttpRequest 对象
+        var xhr = new XMLHttpRequest();
+
+        // 设置请求方法和 URL
+        xhr.open("GET", webhook_URL);
+
+        // 设置响应类型为 JSON
+        xhr.responseType = "json";
+
+        // 设置请求完成后的回调函数
+        xhr.onload = function() {
+            // 如果响应状态码为 200，表示请求成功
+            if (xhr.status == 200) {
+                // 获取响应数据中的温度值
+                var temperature = xhr.response.temperature;
+
+                // 获取网页中显示温度的元素
+                var temperatureElement = document.getElementById("temperature");
+
+                // 将温度值显示在元素中
+                temperatureElement.textContent = "当前温度为：" + temperature + "℃";
+            }
+            else {
+                // 如果请求失败，显示错误信息
+                alert("请求失败：" + xhr.statusText);
+            }
+        };
+
+        // 发送请求
+        xhr.send();
+    </script>
 </body>
 </html>
