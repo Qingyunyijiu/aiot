@@ -1,23 +1,14 @@
+<!DOCTYPE html>
 <html>
+<head>
+<title>温度监测</title>
+</head>
 <body>
 
-<h1>当前温度</h1>
-<p id="temp">获取中...</p>
+<h1>实时温度</h1>
+<p>当前温度:<span id="temp">读取中...</span>°C</p>
 
-<script>
-const apiUrl = '/temp_data.php';
-
-async function getTemp(){
-  const response = await fetch(apiUrl);
-  const data = await response.json();
-
-  document.getElementById('temp').innerText = data.temperature;
-}
-
-getTemp();
-
-setInterval(getTemp, 10000);
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
