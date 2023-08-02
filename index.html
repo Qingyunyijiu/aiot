@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>我的温度数据</title>
+  <!-- 引入Bootstrap库 -->
   <!-- 设置网页样式 -->
   <style>
     body {
@@ -11,16 +12,31 @@
     h1 {
       text-align: center;
     }
+    #temp {
+      font-size: 24px;
+      font-weight: bold;
+      color: green;
+    }
   </style>
 </head>
 <body>
   <!-- 显示网页标题 -->
-  <h1>测试</h1>
-  <!-- 显示最新的温度值 -->
-  <p id="temp">正在获取温度数据...</p>
+  <h1>我的温度数据</h1>
+  <!-- 使用Bootstrap的卡片组件来显示最新的温度值 -->
+  <div class="card text-center">
+    <div class="card-header">
+      最新的温度值
+    </div>
+    <div class="card-body">
+      <p id="temp">正在获取温度数据...</p>
+    </div>
+    <div class="card-footer text-muted">
+      数据来源：^2^
+    </div>
+  </div>
   <!-- 嵌入JavaScript代码 -->
   <script>
-    // 定义一个函数，用来获取webhook发送过来的数据
+    // 定义一个函数，用来获取webhook URL返回的数据
     function getData() {
       // 创建一个XMLHttpRequest对象
       var xhr = new XMLHttpRequest();
@@ -37,7 +53,7 @@
           // 获取温度值
           var temp = response.temperature;
           // 在网页上显示最新的温度值
-          document.getElementById("temp").innerHTML = "最新的温度值为：" + temp + "℃";
+          document.getElementById("temp").innerHTML = temp + "℃";
         }
       };
       // 发送请求
