@@ -4,4 +4,4 @@
 
 # Set an environment variable for your database URL
 [build.environment]
-  DATABASE_URL = "YOUR_DATABASE_URL"
+  DATABASE_URL = "https://njbhggmtvtokpzrtvkoo.supabase.co"
