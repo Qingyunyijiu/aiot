@@ -18,8 +18,15 @@
             // 获取<canvas>元素的引用
             var ctx = document.getElementById("myChart").getContext("2d");
 
+            // 获取当前时间，并格式化为ISO字符串，例如"2023-08-03T13:48:56Z"
+            var now = new Date().toISOString();
+
+            // 获取当前时间减去一小时的时间，并格式化为ISO字符串，例如"2023-08-03T12:48:56Z"
+            var oneHourAgo = new Date(new Date().getTime() - 60 * 60 * 1000).toISOString();
+
             // 从supabase的数据库中获取数据，传入你想要查询的表名和列名
-            var { data, error } = await _supabase.from('temperatures').select('temp, time')
+            // 使用gte和lt参数来指定时间范围，只获取当前时间段的温度数据
+            var { data, error } = await _supabase.from('temperatures').select('temp, time').gte('time', oneHourAgo).lt('time', now)
 
             // 判断是否有错误发生，如果有，则打印错误信息并返回
             if (error) {
@@ -52,7 +59,7 @@
                 options: {
                     title: {
                         display: true, // 是否显示标题
-                        text: "Temperature Data from Supabase" // 标题文本
+                        text: "Temperature Data from Supabase in the Last Hour" // 标题文本
                     },
                     scales: {
                         xAxes: [{
@@ -77,3 +84,4 @@
     </script>
 </body>
 </html>
+
