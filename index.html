@@ -19,7 +19,7 @@
             var ctx = document.getElementById("myChart").getContext("2d");
 
             // 从supabase的数据库中获取数据，传入你想要查询的表名和列名
-            var { data, error } = await _supabase.from('temperatures').select('temp')
+            var { data, error } = await _supabase.from('temperatures').select('temp, time')
 
             // 判断是否有错误发生，如果有，则打印错误信息并返回
             if (error) {
@@ -34,8 +34,8 @@
             }
 
             // 提取数据中的温度值和时间戳，并分别存储在两个数组中
-            var temp = data.map(row => row.temperature) // 温度值数组
-            var time = data.map(row => row.timestamp) // 时间戳数组
+            var temp = data.map(row => row.temp) // 温度值数组
+            var time = data.map(row => row.time) // 时间戳数组
 
             // 创建一个Chart对象，传入<canvas>元素的引用和配置选项
             var myChart = new Chart(ctx, {
