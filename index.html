@@ -1,6 +1,37 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html>
-  <body>
-    <div id="root"></div>
-  </body>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// 初始化Supabase
+const supabaseUrl = 'https://njbhggmtvtokpzrtvkoo.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qYmhnZ210dnRva3B6cnR2a29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTEwMzM4OTAsImV4cCI6MjAwNjYwOTg5MH0.05P3Bf39piFA3cW3x9ufeoqGMJUCN-gvfCVVrq1w-ac' 
+const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+
+// 获取温度数据
+async function getTemperatures() {
+  let { data: temperatures } = await supabase
+    .from('temperatures')
+    .select() 
+  return temperatures 
+}
+
+// 显示温度  
+async function showTemperatures() {
+  let temperatures = await getTemperatures()
+  let html = temperatures.map(t => {
+    return `<div>Temperature: ${t.temp}</div>` 
+  }).join('')
+
+  document.body.insertAdjacentHTML('beforeend', html)
+}
+
+showTemperatures()
+</script>
+
+</body>
 </html>
