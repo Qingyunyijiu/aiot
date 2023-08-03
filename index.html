@@ -1,14 +1,33 @@
-<!DOCTYPE html>
 <html>
 <head>
-<title>温度监测</title>
+    <style>
+        /* Add your CSS style here */
+        h1 {
+            text-align: center;
+        }
+
+        p {
+            font-size: 24px;
+            color: blue;
+        }
+    </style>
 </head>
 <body>
-
-<h1>实时温度</h1>
-<p>当前温度:<span id="temp">读取中...</span>°C</p>
-
-<script src="script.js"></script>
-
+    <h1>My Temperature Sensor</h1>
+    <p id="temp">Loading...</p>
+    <script>
+        // Add your JavaScript code here
+        // Fetch the temperature data from the netlify function endpoint
+        fetch('/.netlify/functions/get-temp')
+            .then(response => response.json())
+            .then(data => {
+                // Update the paragraph element with the temperature data
+                document.getElementById('temp').innerHTML = data.temp + ' °C';
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
+    </script>
 </body>
 </html>
