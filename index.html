@@ -1,87 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- 引入Chart.js库 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-    <!-- 引入supabase-js库 -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <title>温度监测</title>
 </head>
 <body>
-    <!-- 创建一个<canvas>元素，用于绘制图表 -->
-    <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
-    <script>
-        // 初始化supabase对象，传入你的项目的URL和API密钥
-        var _supabase = supabase.createClient('https://njbhggmtvtokpzrtvkoo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qYmhnZ210dnRva3B6cnR2a29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTEwMzM4OTAsImV4cCI6MjAwNjYwOTg5MH0.05P3Bf39piFA3cW3x9ufeoqGMJUCN-gvfCVVrq1w-ac')
+  <h1>温度监测233</h1>
+  
+  <p>设备ID: <span id="deviceId"></span></p>
+  
+  <p>当前温度: <span id="temperature"></span>&deg;C</p>
 
-        // 定义一个异步函数，用于从supabase的数据库中获取数据，并绘制图表
-        async function drawChart() {
-            // 获取<canvas>元素的引用
-            var ctx = document.getElementById("myChart").getContext("2d");
+  <button onclick="getLatestData()">获取最新数据</button>
 
-            // 获取当前时间，并格式化为ISO字符串，例如"2023-08-03T13:48:56Z"
-            var now = new Date().toISOString();
+  <script>
+  // 替换为你的 Supabase API key
+  const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qYmhnZ210dnRva3B6cnR2a29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTEwMzM4OTAsImV4cCI6MjAwNjYwOTg5MH0.05P3Bf39piFA3cW3x9ufeoqGMJUCN-gvfCVVrq1w-ac';
 
-            // 获取当前时间减去一小时的时间，并格式化为ISO字符串，例如"2023-08-03T12:48:56Z"
-            var oneHourAgo = new Date(new Date().getTime() - 60 * 60 * 1000).toISOString();
+  // 替换为你的设备ID
+  const DEVICE_ID = 'temp_201';
 
-            // 从supabase的数据库中获取数据，传入你想要查询的表名和列名
-            // 使用gte和lt参数来指定时间范围，只获取当前时间段的温度数据
-            var { data, error } = await _supabase.from('temperatures').select('temp, time').gte('time', oneHourAgo).lt('time', now)
+  // 替换为你的 Supabase 项目 URL
+  const SUPABASE_URL = 'https://njbhggmtvtokpzrtvkoo.supabase.co';
 
-            // 判断是否有错误发生，如果有，则打印错误信息并返回
-            if (error) {
-                console.error(error)
-                return
-            }
+  document.getElementById('deviceId').innerText = DEVICE_ID;
 
-            // 判断是否有数据返回，如果没有，则打印提示信息并返回
-            if (!data || data.length == 0) {
-                console.log('No data found')
-                return
-            }
+  async function getLatestData() {
 
-            // 提取数据中的温度值和时间戳，并分别存储在两个数组中
-            var temp = data.map(row => row.temp) // 温度值数组
-            var time = data.map(row => row.time) // 时间戳数组
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/temperature?select=*&order=created_at&limit=1&apikey=${API_KEY}`);
 
-            // 创建一个Chart对象，传入<canvas>元素的引用和配置选项
-            var myChart = new Chart(ctx, {
-                type: "line", // 图表类型，可以是"bar", "line", "scatter", "doughnut"等
-                data: {
-                    labels: time, // 图表的标签，使用时间戳数组
-                    datasets: [{
-                        data: temp, // 图表的数据，使用温度值数组
-                        label: "Temperature", // 数据集的名称
-                        borderColor: "blue", // 数据集的颜色
-                        fill: false // 是否填充区域
-                    }]
-                },
-                options: {
-                    title: {
-                        display: true, // 是否显示标题
-                        text: "Temperature Data from Supabase in the Last Hour" // 标题文本
-                    },
-                    scales: {
-                        xAxes: [{
-                            type: 'time', // x轴的类型，使用时间类型
-                            time: {
-                                unit: 'minute' // x轴的单位，使用分钟单位
-                            }
-                        }],
-                        yAxes: [{
-                            scaleLabel: {
-                                display: true, // 是否显示y轴的标签
-                                labelString: 'Temperature (°C)' // y轴的标签文本
-                            }
-                        }]
-                    }
-                }
-            });
-        }
+    const data = await response.json();
 
-        // 调用异步函数，绘制图表
-        drawChart();
-    </script>
+    document.getElementById('temperature').innerText = data[0].value;
+
+  }
+
+  setInterval(getLatestData, 5000);
+
+  </script>
+
 </body>
 </html>
-
