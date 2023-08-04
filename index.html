@@ -18,9 +18,22 @@
     document.getElementById('deviceId').innerText = DEVICE_ID;
 
 async function getLatestTemperature() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/temperature?device_id=eq.${DEVICE_ID}&apikey=${API_KEY}&order=created_at.desc`);
-  const data = await res.json();
-  return data[0].value;
+
+  let url = `${SUPABASE_URL}/rest/v1/temperature?device_id=eq.${DEVICE_ID}&apikey=${API_KEY}`;
+
+  // 尝试按创建时间排序
+  try {
+    url += '&order=timestamp.desc';
+    const res = await fetch(url);
+    const data = await res.json();
+    return data[0].value;
+  } catch (err) {
+    // 如果报错,直接取第一条
+    const res = await fetch(url); 
+    const data = await res.json();
+    return data[0].value; 
+  }
+
 }
 
     setInterval(async () => {
