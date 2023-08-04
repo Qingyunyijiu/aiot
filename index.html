@@ -4,20 +4,20 @@
   <title>温度监测</title>
 </head>
 <body>
-  <h1>温度监测233</h1>
-  
+
+  <h1>温度监测</h1>
+
   <p>设备ID: <span id="deviceId"></span></p>
-  
+
   <p>当前温度: <span id="temperature"></span>&deg;C</p>
 
-  <button onclick="getLatestData()">获取最新数据</button>
-
   <script>
+
   // 替换为你的 Supabase API key
   const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qYmhnZ210dnRva3B6cnR2a29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTEwMzM4OTAsImV4cCI6MjAwNjYwOTg5MH0.05P3Bf39piFA3cW3x9ufeoqGMJUCN-gvfCVVrq1w-ac';
 
   // 替换为你的设备ID
-  const DEVICE_ID = 'temp_201';
+  const DEVICE_ID = 'temp_201';   
 
   // 替换为你的 Supabase 项目 URL
   const SUPABASE_URL = 'https://njbhggmtvtokpzrtvkoo.supabase.co';
@@ -26,15 +26,17 @@
 
   async function getLatestData() {
 
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/temperature?select=*&order=created_at&limit=1&apikey=${API_KEY}`);
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/temperature?select=*&order=created_at&limit=1&apikey=\${API_KEY}`);
 
     const data = await response.json();
-
-    document.getElementById('temperature').innerText = data[0].value;
+    
+    if (data.length > 0) {
+      document.getElementById('temperature').innerText = data[0].value;
+    }
 
   }
 
-  setInterval(getLatestData, 5000);
+  setInterval(getLatestData, 30000);
 
   </script>
 
